@@ -22,7 +22,7 @@ else {
     do {
         Start-Sleep -s 5 # change to 1 after working
         $ErrorActionPreference = "SilentlyContinue"
-        $Temperatures = @( Import-CSV Temperatures.csv ) # will this always be successful???
+        $Temperatures = @( Import-CSV Temperatures.csv ) # will this always be successful???, yes it will fix this
         $Result = $?
         $ErrorActionPreference = "Continue"
         write-host "Result = $Result" # remove this later
