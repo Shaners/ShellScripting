@@ -10,10 +10,28 @@ function Get-CurrentTemp {
     $ErrorActionPreference = "Continue"
 }
 
-# read temperatures.csv to collection, if locked retry every 1 second forever, if csv not exist create empty collection
-$Temperatures = @( Import-CSV Temperatures.csv )
-$Temperatures = @( )
+# read temperatures.csv to collection
+#   if csv not exist create empty collection
+#   if locked retry every 1 second forever
+if ( -not (test-path ".\Temperatures.csv" -pathtype leaf) ) {
+    write-host "Temperatures.csv does not exist" # remove this later
+    $Temperatures = @( )
+}
+
+do {
+    Start-Sleep -s 5 # change to 1 after working
+    $ErrorActionPreference = "SilentlyContinue"
+    $Temperatures = @( Import-CSV Temperatures.csv ) # will this always be successful???
+    $Result = $?
+    $ErrorActionPreference = "Continue"
+    write-host "Result = $Result" # remove this later
+}
+until ( $Result )
+
+write-host "Loop has ended. Result is $Result" # remove this later
+write-host $Temperatures # remove this later
 # finish this sandwich
+# finished needs testing
 
 $CurrentTemp = Get-CurrentTemp
 
