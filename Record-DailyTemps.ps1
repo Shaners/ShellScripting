@@ -22,12 +22,13 @@ else {
     do {
         Start-Sleep -s 5 # change to 1 after working
         $ErrorActionPreference = "SilentlyContinue"
-        $Temperatures = @( Import-CSV Temperatures.csv ) # will this always be successful???, yes it will fix this
+        Import-CSV Temperatures.csv | out-null # dirty? seems to work
         $Result = $?
         $ErrorActionPreference = "Continue"
         write-host "Result = $Result" # remove this later
     }
     until ( $Result )
+    $Temperatures = @( Import-CSV Temperatures.csv )
 }
 
 write-host "Loop has ended. Result is $Result" # remove this later
