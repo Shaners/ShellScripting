@@ -18,15 +18,17 @@ if ( -not (test-path ".\Temperatures.csv" -pathtype leaf) ) {
     $Temperatures = @( )
 }
 
-do {
-    Start-Sleep -s 5 # change to 1 after working
-    $ErrorActionPreference = "SilentlyContinue"
-    $Temperatures = @( Import-CSV Temperatures.csv ) # will this always be successful???
-    $Result = $?
-    $ErrorActionPreference = "Continue"
-    write-host "Result = $Result" # remove this later
+else {
+    do {
+        Start-Sleep -s 5 # change to 1 after working
+        $ErrorActionPreference = "SilentlyContinue"
+        $Temperatures = @( Import-CSV Temperatures.csv ) # will this always be successful???
+        $Result = $?
+        $ErrorActionPreference = "Continue"
+        write-host "Result = $Result" # remove this later
+    }
+    until ( $Result )
 }
-until ( $Result )
 
 write-host "Loop has ended. Result is $Result" # remove this later
 write-host $Temperatures # remove this later
