@@ -50,11 +50,11 @@ else {
 $Temperatures | Export-CSV Temperatures.tmp -notype -Force
 # if temperatures locked retry every 1 second forever
 do {
-        Start-Sleep -s 1
-        $ErrorActionPreference = "SilentlyContinue"
-        Import-CSV Temperatures.csv | out-null # dirty? is there a better way?
-        $Result = $?
-        $ErrorActionPreference = "Continue"
+    Start-Sleep -s 1
+    $ErrorActionPreference = "SilentlyContinue"
+    Import-CSV Temperatures.csv | out-null # dirty? is there a better way?
+    $Result = $?
+    $ErrorActionPreference = "Continue"
 }
 until ( $Result )
 Move-item Temperatures.csv Temperatures.bak -Force
