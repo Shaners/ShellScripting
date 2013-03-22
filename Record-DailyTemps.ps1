@@ -45,7 +45,8 @@ if ( $Temperatures.date -contains $CurrentDate ) {
     }
 } # if today not exist in collection add current date plus current temp
 else {
-    $Temperatures.Add($CurrentDate","$CurrentTemp) #Willl this work??
+    $Temperatures.Add($CurrentDate","$CurrentTemp) # Will this work??
+    # $Temperatures +=(($CurrentDate),($CurrentTemp)) # Alternative method
 }
 # Needs testing
 
