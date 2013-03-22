@@ -25,7 +25,7 @@ else {
         $ErrorActionPreference = "Continue"
     }
     until ( $Result )
-    $Temperatures = @( Import-CSV Temperatures.csv )
+    $Temperatures = @( Import-CSV Temperatures.csv ) # Maybe should also use -Header here then remove extra headers
 }
 
 $CurrentTemp = Get-CurrentTemp
@@ -46,10 +46,10 @@ else {
     $Temperatures += $TodayDateTemp
 }
 
-# write collection to temperatures.csv using safe update strat ( rename orginal .bak, new .new then .csv )
+# Write collection to temperatures.csv using safe update strat ( rename orginal .bak, new .new then .csv )
 $Temperatures | Export-CSV Temperatures.tmp -notype -Force
 # if temperatures locked retry every 1 second forever
-do {
+do { # Should add a check for file existing here
     Start-Sleep -s 1
     $ErrorActionPreference = "SilentlyContinue"
     Import-CSV Temperatures.csv | out-null # dirty? is there a better way?
@@ -57,6 +57,7 @@ do {
     $ErrorActionPreference = "Continue"
 }
 until ( $Result )
+Start-Sleep -s 3 # Just in case
 Move-item Temperatures.csv Temperatures.bak -Force
 
 Move-item Temperatures.tmp Temperatures.csv
