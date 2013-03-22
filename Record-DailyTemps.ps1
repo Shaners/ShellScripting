@@ -17,7 +17,6 @@ if ( -not (test-path ".\Temperatures.csv" -pathtype leaf) ) {
     write-host "Temperatures.csv does not exist" # remove this later
     $Temperatures = @( )
 }
-
 else {
     do {
         Start-Sleep -s 5 # change to 1 after working
@@ -33,18 +32,22 @@ else {
 
 write-host "Loop has ended. Result is $Result" # remove this later
 write-host $Temperatures # remove this later
-# finish this sandwich
-# finished needs testing
 
 $CurrentTemp = Get-CurrentTemp
-
+$CurrentDate = (Get-Date).ToString('yyyy-MM-dd')
 
 # if today exists in collection change it's temp to current temp
-
-# if today not exist in collection add current date plus current temp
+if ( $Temperatures.date -contains $CurrentDate ) {
+    foreach ( $record in $Temperatures ) { # Got to be a better way to do this
+        if ( $record.date -eq $CurrentDate ) {
+            $record.temp = $CurrentTemp
+        }
+    }
+} # if today not exist in collection add current date plus current temp
+else {
+    $Temperatures.Add($CurrentDate","$CurrentTemp) #Willl this work??
+}
+# Needs testing
 
 # write collection to temperatures.csv using safe update strat ( rename orginal .bak, new .new then .csv )
-
 # if temperatures locked retry every 1 second forever
-
-# does not accept command line parameters
