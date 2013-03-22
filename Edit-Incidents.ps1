@@ -28,7 +28,11 @@ if ( IsLocked($FileName) ) {
     write-host "Waiting for file to be unlocked"
     do {
         Start-Sleep -s 1
-        write-host -nonewline "." # padright to make this blink? Clear-host?
+        write-host "`r.  " -nonewline # padright to make this blink? Clear-host?
+        Start-Sleep -s 1
+        write-host "`r.. " -nonewline
+        Start-Sleep -s 1
+        write-host "`r..." -nonewline
     }
     until ( -not ( IsLocked($FileName) ) )
 }
