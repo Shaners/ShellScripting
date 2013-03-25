@@ -60,3 +60,13 @@ Get-ChildItem | Where-Object { ($_.LastWriteTime.date -ge $FirstLast.date) -and 
 # !!This needs fixing!!
 # Assign number of seconds ago the first explorer process was started to a variable
 $ExplorerSecs = ((Get-Date) - ((Get-Process Explorer).StartTime)).TotalSeconds
+
+# Change all "."s in file name to "_"s except for the last one **not my solution**
+Get-Item * | ForEach-Object {
+  $NewName = $_.Name
+  for( $DotPos = $NewName.IndexOf("."); $DotPos -ne $NewName.LastIndexOf("."); $DotPos = $NewName.IndexOf(".") ) {
+    if ( $DotPos -lt 0 ) { break }
+    $NewName = $NewName.SubString( 0, $DotPos ) + "_" + $NewName.SubString( $DotPos+1 )
+  }
+  if ( $NewName -ne $_.Name ) { $_.MoveTo( $NewName ) }
+}
