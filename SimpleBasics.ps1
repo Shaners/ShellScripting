@@ -57,9 +57,8 @@ $FirstLast = $FirstCurrent.AddMonths(-1)
 # These variables are named terribly...
 Get-ChildItem | Where-Object { ($_.LastWriteTime.date -ge $FirstLast.date) -and ($_.LastWriteTime.date -lt $FirstCurrent.date ) }
 
-# !!This needs fixing!!
 # Assign number of seconds ago the first explorer process was started to a variable
-$ExplorerSecs = ((Get-Date) - ((Get-Process Explorer).StartTime)).TotalSeconds
+$ExplorerSecs = ((Get-Date) - (@(Get-Process Explorer)[0].StartTime)).TotalSeconds
 
 # Change all "."s in file name to "_"s except for the last one **not my solution**
 Get-Item * | ForEach-Object {
@@ -70,3 +69,23 @@ Get-Item * | ForEach-Object {
   }
   if ( $NewName -ne $_.Name ) { $_.MoveTo( $NewName ) }
 }
+
+# 3 ways to display quote marks, is any one method best?
+Write-Host '"Madam, I''m Adam" is a palindrome.' # Double single quote, to show I'm
+Write-Host """Madam, I'm Adam"" is a palindrome." # Double double quote, to show "s
+Write-Host "`"Madam, I'm Adam`" is a palindrome." # Backtick ` escape
+
+# Show day of the week
+Write-Host "Today is $((Get-Date).DayOfWeek)"
+
+# Format a SIN for display
+$a = 123456789
+$a.ToString( "###\-###\-###" )
+
+# Show sum of processor time in seconds used by all of the threads of the first Explorer process
+# Note ForEach-Object is for a pipeline and only has a code block
+#   ForEach accepts a condition ( condition ) and code block { code block }
+ForEach ( $Thread in (@(Get-Process Explorer)[0].threads )) {
+  $TotalProcess += $Thread.TotalProcessorTime
+}
+Write-Host "The total processing time in seconds for Explorer is $($TotalProcess.TotalSeconds)"
