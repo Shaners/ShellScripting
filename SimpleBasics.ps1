@@ -1,5 +1,10 @@
 # For review and studying
 
+Write-Host "!Warning! You tried to run this file as a script, not a good idea, quitting now."
+if ( $True ) { break }
+Start-Sleep 5
+Exit
+
 # Get files with a type of .bat whose names end in DB
 Get-ChildItem *DB.bat
 
@@ -89,3 +94,42 @@ ForEach ( $Thread in (@(Get-Process Explorer)[0].threads )) {
   $TotalProcess += $Thread.TotalProcessorTime
 }
 Write-Host "The total processing time in seconds for Explorer is $($TotalProcess.TotalSeconds)"
+
+# Loop until notepad stops running
+While ($True) {
+  $Notepad = Get-Process | Where-Object { $_.name -eq "Notepad" }
+  if ( $Notepad -eq $Null ) { break }
+  Write-Host -nonewline "Please close notepad to continue..."
+  Start-Sleep 1
+}
+
+# Set the windows default path to the current working directory of PS
+[IO.Directory]::SetCurrentDirectory((Get-Location))
+
+# Continue cannot be used with a foreach-object cmdlet
+# !!Example here!! # 
+
+# Set windows 7 menu display to 200ms
+Set-ItemProperty "HKCU:\ControlPanel\Desktop" MenuShowDelay 200 -type Dword
+
+# Function to return the boot time of the system
+function Get-BootTime {
+  # $Event = Get-EventLog system -instanceId 12 -newest 1 # Needs some error handling here if no instance ID of 12 exists
+  if ( $Event -eq $Null ) {
+    $Event = Get-EventLog system | Select -last 1
+  }
+  $BootTime = $Event.TimeGenerated
+  return $BootTime
+}
+# Not a very good way to get system boot time, see WMI objects for a better method
+
+# Delete files in Temp directory and all sub folders that were created before the system was last booted
+$ToBeDeleted = @( Get-ChildItem ((Get-ChildItem env:\TEMP).value) -recurse | Where-Object { ($_.CreationTime -lt (Get-BootTime)) -and ($_ -is [IO.FileInfo]) } )
+ForEach ( $File in $ToBeDeleted ) {
+  Write-host $File " will be deleted."
+  $FileCount += 1
+  $TotalBytes += $File.length
+}
+$ToBeDeleted | Remove-Item -whatif # Remove -whatif to actually have this run
+Write-Host $FileCount "files have been removed. For a total of $TotalBytes bytes."
+
