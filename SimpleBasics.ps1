@@ -134,3 +134,14 @@ ForEach ( $File in $ToBeDeleted ) {
 $ToBeDeleted | Remove-Item -whatif # Remove -whatif to actually have this run
 Write-Host $FileCount "files have been removed. For a total of $TotalBytes bytes."
 
+# Function that returns a hash table of holiday dates and names based on Holidays.txt
+function Get-HolidayTable {
+  $Holidays = Get-Content Holidays.txt # need a test path here then if file does not exist return $null
+  $Table = @{}
+  $Holidays | ForEach {
+    if ( $_ -match '^(?<Date>[0-9]{4}-[0-9]{2}-[0-9]{2})\s+(?<Name>.+)'){
+      $Table.Add($matches['Date'], $matches['Name'])
+    } # add line to ensure date is valid, e.g. 2013-99-99 would be passed but we don't want it to
+  }
+  return $Table
+}
