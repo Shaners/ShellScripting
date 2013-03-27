@@ -145,3 +145,34 @@ function Get-HolidayTable {
   }
   return $Table
 }
+
+# Shows the number of files on the entire C drive that were created on a holiday, uses get-holidays function
+$Table = Get-HolidayTable
+if ( $Table -eq $Null ) {
+  Write-Host "Error cannot load holiday table."
+  exit 1
+}
+$FileCount = 0
+Get-ChildItem C:/ -recurse | Where-Object { $_ -is [IO.FileInfo] } | ForEach-Object { # new code here # 
+
+# Counts the number of words in a text document
+function ErrorOut {
+  param ( [string]$Message, [int]$ExitCode=1 )
+  Write-Host -foregroundcolor red "`n$Message"; exit $ExitCode
+}
+if ( $args.count -ne 1) {
+  ErrorOut "Error please provide one file to word count."
+}
+if ( -not (test-path $args[0])) {
+  ErrorOut "Error Cannot find the file you provided." 2
+}
+$File = Get-Item $args[0]
+$FileCollection = Get-Content $File
+$LineCount = $FileCollection.Count
+$WordCount = 0
+$FileName = $File.Name
+ForEach ( $Line in $FileCollection ) {
+  $SplitLine = ( $Line -split '[\W]+' )
+  $WordCount += $SplitLine.Count
+}
+Write-Host "There are $LineCount line(s) in $FileName and $WordCount word(s)."
