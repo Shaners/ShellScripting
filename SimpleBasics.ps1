@@ -114,6 +114,7 @@ Set-ItemProperty "HKCU:\ControlPanel\Desktop" MenuShowDelay 200 -type Dword
 
 # Function to return the boot time of the system
 function Get-BootTime {
+  # This is broken
   # $Event = Get-EventLog system -instanceId 12 -newest 1 # Needs some error handling here if no instance ID of 12 exists
   if ( $Event -eq $Null ) {
     $Event = Get-EventLog system | Select -last 1
