@@ -20,7 +20,8 @@ Copy-Item # Copies an item from one location to another.
 # Export-Clixml # prob not on test but play with this!! Creates an XML-based rep of obj file.
 Export-Console # Exports the configuration of the current console to a file. Fit this in if can.
 Export-Csv # Creates a comma-separated values (CSV) file
-ForEach-Object # Used in a pipeline and only has a code block
+ForEach-Object # Used in a pipeline and only has a code block, apparently foreach just an alias for this
+# I am missing something here, why does foreach.object expect an in but not foreach???
 # Format-Custom # prob not on test but interesting
 Format-List # Formats the output as a list of properties each on newline
 Format-Table # Formats the output as a table.
@@ -31,36 +32,36 @@ Get-Alias # Print all alias for current session
 Get-ChildItem # gets the items in one or more specified locations, gets items inside a container
 Get-Command # gets basic info for all cmdlets
 Get-Content # Gets the content of the item at the specified location.
-Get-Credential 
-# Get-Culture
-Get-Date
-Get-EventLog
-Get-ExecutionPolicy
-Get-Help
-# Get-History
-Get-Host
-Get-Item
-Get-ItemProperty
-Get-Location
-Get-Member
-# Get-PfxCertificate
-Get-Process
-Get-PSDrive
-Get-PSProvider
-Get-PSSnapin
-Get-Service
-# Get-TraceSource
-# Get-UICulture
-Get-Unique
-Get-Variable
-Get-WmiObject
-Group-Object #
-# Import-Alias
-# Import-Clixml
-Import-Csv
-Invoke-Expression
-Invoke-History
-Invoke-Item
+Get-Credential # Gets user pass, to be used elsewhere
+# Get-Culture # Gets regional settigns
+Get-Date # current date and time
+Get-EventLog # local event log
+Get-ExecutionPolicy # PS exe policy
+# Get-Help # prints help
+# Get-History # list of commands entered in session, why?
+# Get-Host # can be used to access objs that allow console UI
+Get-Item # manipulate or view information on a folder itself, cannot recurse, cannot use -include
+Get-ItemProperty # gets propertyies of an item
+Get-Location # current working loc
+Get-Member # returns details on the provided object's type
+# Get-PfxCertificate # gets pfx certs, no idea what they are
+Get-Process # get all process that are running
+Get-PSDrive # get info on PS drives
+Get-PSProvider # get info on PS providers
+Get-PSSnapin # gets PS Snapins
+Get-Service # get service on local
+# Get-TraceSource # trace components, more for PS developers
+# Get-UICulture # regional settings type stuff for current PS session
+Get-Unique # unique items from a list
+Get-Variable # print all variables for current session
+Get-WmiObject # gets wmi classes
+Group-Object # group objects that have the same value
+# Import-Alias # Imports alias from a file
+# Import-Clixml # imports a clixml file, is clixml different than xml?
+Import-Csv # imports csv data
+Invoke-Expression # runs expression that is provided in the form of a string
+# Invoke-History # runs cmds from session history, why? 
+Invoke-Item # runs provider specific action on item, e.g. open txt doc in default program
 Join-Path
 Measure-Command
 Measure-Object #
