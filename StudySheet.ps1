@@ -135,15 +135,16 @@ Write-Output # send output to next command in pipeline
 # How cmdlet parameters work
 
 # How to read help syntax descriptions
-
+<command name> -<required parameter> <required value> [Optional] <required> -parameter
 
 # Powershell pipelines
 # How to write a series of cmlets in a pipeline 
+get-cmlet | sort-cmdlet | filer-cmdlet | out-cmdlet
 
 # Stages of 'get', 'filter', 'process' and 'formatting' cmlets in a pipeline
 
 # Use of parenthesis to include pipeline results in a statement
-
+$a = ( Get-Process | Sort-Object ID )
 
 # PS variables and Operators
 # Which operators do what
