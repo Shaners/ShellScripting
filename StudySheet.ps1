@@ -88,7 +88,7 @@ Remove-Item # Deletes files and folders
 Remove-ItemProperty 
 Remove-PSDrive
 Remove-PSSnapin
-Remove-Variablem
+Remove-Variable
 Rename-Item # renames in provder namespace
 Rename-ItemProperty # changes name of property
 # Resolve-Path # Resolves wildcard characters in a path, why? for what?
