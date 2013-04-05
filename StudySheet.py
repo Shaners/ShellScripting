@@ -20,9 +20,9 @@ Copy-Item # Copies an item from one location to another.
 # Export-Clixml # prob not on test but play with this!! Creates an XML-based rep of obj file.
 Export-Console # Exports the configuration of the current console to a file. Fit this in if can.
 Export-Csv # Creates a comma-separated values (CSV) file
-ForEach-Object # Used in a pipeline and only has a code block, apparently foreach just an alias for this
-# I am missing something here, why does foreach.object expect an in but not foreach???
-# Format-Custom # prob not on test but interesting
+ForEach-Object # Has to be fed objects in a pipeline, only has a code block
+# ForEach is an alias for ForEach-Object when used in a pipeline
+# ForEach used at the beginning of a line is a statement which is similar but not the same
 Format-List # Formats the output as a list of properties each on newline
 Format-Table # Formats the output as a table.
 # Format-Wide # Prob not on test, not sure the point
@@ -62,75 +62,75 @@ Import-Csv # imports csv data
 Invoke-Expression # runs expression that is provided in the form of a string
 # Invoke-History # runs cmds from session history, why? 
 Invoke-Item # runs provider specific action on item, e.g. open txt doc in default program
-Join-Path
-Measure-Command
-Measure-Object #
-Move-Item
-Move-ItemProperty
-# New-Alias
-New-Item
-New-ItemProperty
-New-Object
-New-PSDrive
-New-Service
-New-TimeSpan
-New-Variable
-Out-Default
-Out-File
-Out-Host
-Out-Null # Uses to surpress unwanted output
-Out-Printer
-Out-String
-Pop-Location
-Push-Location
-Read-Host
-Remove-Item
-Remove-ItemProperty
+Join-Path -path x -childpath y # Combines paths using delimiters
+Measure-Command # Measures how long it takes to run script blocks and cmdlets
+Measure-Object # Performs calcualtions on properties of objects, min max avg sum, number of lines, words, characters 
+Move-Item -path x -destination y
+Move-ItemProperty x -name y -destination z
+# New-Alias # Creates an alias, maybe should avoid
+New-Item -path x -name y -itemtype z -value a
+New-ItemProperty -name x -value y
+New-Object -COMObject "Shell.Application"
+New-PSDrive # Maps a network drive
+# New-Service # Creates new windows service
+New-TimeSpan -start x -end y, -days -hour -minute
+# New-Variable # Why use this and not just $var = value?? 
+# Out-Default # Placeholder for writing own out-default, this is kind of weird
+Out-File -filepath x, -inputobject # Sends the results of a pipeline to a file, same as > but allows parameters
+Out-Host # Prints results of pipe to host, allows paging
+Out-Null # Used to surpress unwanted output, deletes output from pipeline
+# Out-Printer # Send output to a printed
+# Out-String # converts objects to single string, .ToString better?
+Pop-Location # changes cwd to most recent loc added to stack
+Push-Location # Added cwd to top of stack
+# Read-Host # Used to prompt user for input
+Remove-Item # Deletes files and folders
+Remove-ItemProperty 
 Remove-PSDrive
 Remove-PSSnapin
-Remove-Variable
-Rename-Item
-Rename-ItemProperty
-Resolve-Path
-Restart-Service
-Resume-Service
-Select-Object #
-Select-String
-# Set-Acl
+Remove-Variablem
+Rename-Item # renames in provder namespace
+Rename-ItemProperty # changes name of property
+# Resolve-Path # Resolves wildcard characters in a path, why? for what?
+# Restart-Service # Stops and then starts a service
+# Resume-Service # Resumes paused service
+Select-Object -last 1 -first 1 -property x -unique # Filters results from a pipe
+Select-String -path x -pattern y # Searches for string in file
+# Set-Acl 
 # Set-Alias
 # Set-AuthenticodeSignature
-Set-Content #
+Set-Content # Changes x to value you set
 Set-Date
 Set-ExecutionPolicy #
 Set-Item
 Set-ItemProperty
 Set-Location
-Set-PSDebug
-Set-Service
+# Set-PSDebug
+# Set-Service
 # Set-TraceSource
 Set-Variable
-Sort-Object #
-Split-Path
-Start-Service
-Start-Sleep #
+Sort-Object # Sorts object by property values
+Split-Path # Returns part of a path
+# Start-Service
+Start-Sleep -s n, -m n # pauses execution of script
 # Start-Transcript
-Stop-Process
-Stop-Service
+# Stop-Process
+# Stop-Service
 # Stop-Transcript
-Suspend-Service
-Tee-Object
-Test-Path #
-# Trace-Command
+# Suspend-Service
+# Tee-Object # Send output in two directions
+Test-Path -path path # Determines if path exists
+# Trace-Command 
 # Update-FormatData
 # Update-TypeData
-Where-Object #
-Write-Debug
-Write-Error
-Write-Host #
-Write-Output
-Write-Progress
-Write-Verbose
-Write-Warning
+Where-Object { code block $_ }# selects object from a collection
+# Write-Debug
+# Write-Error
+Write-Host # writes custom output to console, colours etc
+Write-Output # send output to next command in pipeline
+# Write-Progress # Progress bar
+# Write-Verbose # Verbose message stream???
+# Write-Warning "text" # Displays warning message
 
 # How cmdlet parameters work
 
