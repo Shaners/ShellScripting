@@ -12,9 +12,16 @@
 # Version: 0.1
 # Created on: Apr 19th, 2013
 
+# Collection of common URLs
+# Used in Test-CommonURLs function
+$CommonURLs = @( "http://www.google.ca", "http://www.google.com", "https://www.facebook.com", "https://twitter.com", "http://www.wolframalpha.com" )
+#! Should this be nested within Test-CommonURLs func?
 
-# Error out func Error-Out
 # Exit with status message on improper use
+function Error-Out {
+  param ( [string]$Message, [int]$ExitCode=1 )
+  Write-Host -foregroundcolor red "`n$Message"; exit $ExitCode
+}
 
 # Test-LiveURL
 # Tests if a single website url is working properly
