@@ -14,7 +14,7 @@
 
 # Collection of common URLs
 # Used in Test-CommonURLs function
-$CommonURLs = @( "http://www.google.ca", "http://www.google.com", "https://www.facebook.com", "https://twitter.com", "http://www.wolframalpha.com" )
+$CommonURLs = "http://www.google.ca", "http://www.google.com", "https://www.facebook.com", "https://twitter.com", "http://www.wolframalpha.com"
 #! Should this be nested within Test-CommonURLs func?
 
 # Create the Web Client object
@@ -43,12 +43,13 @@ function Test-LiveURL {
   }
   
   $then = get-date
-  $response = $webRequest.GetResponse()
+  $response = $webRequest.GetResponse() # time outs with google ca happening here for some reason
   $now = get-date
-  $report = @{ URL = $URL;
-               StatusCode = $response.Statuscode -as [int]; 
-               StatusDescription = $response.StatusDescription;
-               ResponseTime = "$(($now - $then).totalseconds)" 
+  $report = @{ URL = $URL
+               StatusCode = $response.Statuscode -as [int]
+               StatusDescription = $response.StatusDescription
+               ResponseTime = "$(($now - $then).totalseconds)"
+               ResponseURI = $response.ResponseUri
   }
   return $report
 }
@@ -58,7 +59,7 @@ function Test-LiveURL {
 # Tests some common sites that should always be up
 # If fail error out
 function Test-CommonURLs {
-    #stuff happens here!
+  #stuff happens here!
 }
 
 # URL format test func Test-FormatURL
