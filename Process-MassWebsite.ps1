@@ -14,7 +14,7 @@
 
 # Collection of common URLs
 # Used in Test-CommonURLs function
-$CommonURLs = "http://www.google.ca", "http://www.google.com", "https://www.facebook.com", "https://twitter.com", "http://www.wolframalpha.com"
+$CommonURLs = "https://www.google.ca", "https://www.google.com", "https://www.facebook.com", "https://twitter.com", "http://www.wolframalpha.com"
 #! Should this be nested within Test-CommonURLs func?
 
 # Create the Web Client object
@@ -43,7 +43,7 @@ function Test-LiveURL {
   }
   
   $then = get-date
-  $response = $webRequest.GetResponse() # time outs with google ca happening here for some reason
+  $response = $webRequest.GetResponse()
   $now = get-date
   $report = @{ URL = $URL
                StatusCode = $response.Statuscode -as [int]
@@ -63,5 +63,8 @@ function Test-CommonURLs {
 }
 
 # URL format test func Test-FormatURL
-# If the url doesn't start with an h it isn't valid
+# If the url doesn't start with http:// or https:// then it isn't valid
 # Can be expanded later
+# a lot of this is already taken care of in Test-LiveURL but I want to be able to 
+# pull out all URLs that don't start with http and not test them but put into a 
+# separate invalid / to be fixed list
