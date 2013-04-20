@@ -21,6 +21,7 @@ $CommonURLs = "https://www.google.ca", "https://www.google.com", "https://www.fa
 $webClient = New-Object Net.WebClient
 #! No need for System. but since this is a script file maybe use the full name?
 #!! WebRequest looks to be faster and better method, maybe remove this
+#!!! Use for download string now or in another scritp
 
 # Exit with status message on improper use
 function Error-Out {
@@ -59,7 +60,10 @@ function Test-LiveURL {
 # Tests some common sites that should always be up
 # If fail error out
 function Test-CommonURLs {
-  #stuff happens here!
+  param ( [array]$URLS )
+  foreach ( $URL in $URLS ){
+    if 
+  }
 }
 
 # URL format test func Test-FormatURL
