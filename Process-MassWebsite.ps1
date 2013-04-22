@@ -56,14 +56,16 @@ function Test-LiveURL {
 }
 #! clean this function up? Add more response details?
 
-# Common site check func Test-CommonURLs
 # Tests some common sites that should always be up
-# If fail error out
 function Test-CommonURLs {
   param ( [array]$URLS )
+  $failCount = 0
   foreach ( $URL in $URLS ){
-    if 
+    if ( ( Test-LiveURL $URL ) -eq $False ){
+      $failCount += 1
+    }
   }
+  return $failCount, $URLS.count
 }
 
 # URL format test func Test-FormatURL
