@@ -9,19 +9,11 @@
 # Exports failures to CSV
 #
 # Shane Lister
-# Version: 0.1
-# Created on: Apr 19th, 2013
+# Version: 0.2
+# Created on: Apr 22nd, 2013
 
 # Collection of common URLs
-# Used in Test-CommonURLs function
 $CommonURLs = "https://www.google.ca", "https://www.google.com", "https://www.facebook.com", "https://twitter.com", "http://www.wolframalpha.com"
-#! Should this be nested within Test-CommonURLs func?
-
-# Create the Web Client object
-$webClient = New-Object Net.WebClient
-#! No need for System. but since this is a script file maybe use the full name?
-#!! WebRequest looks to be faster and better method, maybe remove this
-#!!! Use for download string now or in another scritp
 
 # Exit with status message on improper use
 function Error-Out {
@@ -33,10 +25,10 @@ function Error-Out {
 # Returns false or a hash table
 function Test-LiveURL {
   param ( [string]$URL )
-  $ErrorActionPreference = "SilentlyContinue" # Lets me handle error processing
-  $webRequest = [net.WebRequest]::Create($URL) # Sends a request to a URL
-  $Result = $? # Sets result to error status of last executed command
-  $ErrorActionPreference = "Continue" # Reactivate showing errors
+  $ErrorActionPreference = "SilentlyContinue"
+  $webRequest = [net.WebRequest]::Create($URL)
+  $Result = $?
+  $ErrorActionPreference = "Continue"
 
   if ( $Result -eq $False ) {
       return $False
@@ -54,7 +46,6 @@ function Test-LiveURL {
   }
   return $report
 }
-#! clean this function up? Add more response details?
 
 # Tests some common sites that should always be up
 function Test-CommonURLs {
@@ -68,17 +59,9 @@ function Test-CommonURLs {
   return $failCount, $URLS.count
 }
 
-# URL format test func Test-FormatURL
-# If the url doesn't start with http:// or https:// then it isn't valid
-# Can be expanded later
-# a lot of this is already taken care of in Test-LiveURL but I want to be able to 
-# pull out all URLs that don't start with http and not test them but put into a 
-# separate invalid / to be fixed list
-function Test-FormatURL {
-  param ( [string]$URL )
-  if ( ($URL )
-}
-#! May not need this at all and can just do .startswith("x") in main call
+
+# Error exit out if it is suspect that there is no connection
+Test-CommonURLs #finish this
 
 # Error exit out if no parameters are provided to script
 if ( $args.count -ne 1 ){
@@ -86,11 +69,47 @@ if ( $args.count -ne 1 ){
 }
 
 # Error exit if a folder is picked
-
-# Error exit out if file does not exist
-if ( -not (test-path working.xlsx -pathtype leaf) ){
-  Error-Out "The file you selected doesn't exist there. `n!!!Exiting script!!!", 2
+if ( Test-Path $args[0] -pathtype container ){
+  Error-Out "You provided a folder. Please provide a .CSV file instead. `n!!!Exiting script!!!", 2
 }
 
-# import CSV file into a collection
-Import-CSV $args[0]
+# Error exit out if file does not exist
+if ( -not (Test-Path $args[0] -pathtype leaf) ){
+  Error-Out "The file you selected doesn't exist there. `n!!!Exiting script!!!", 3
+}
+
+# Import CSV file into a collection
+$URLs = @( Import-CSV $args[0] )
+
+# Empty collections that will be used
+$PassURLs = @()
+$FormatFailURLs = @()
+$FailedURLs = @()
+$WorkingURLs = @{}
+
+Foreach ( $URL in $URLs ){
+  if ( ($URL.StartsWith("http://")) -or ($URL.StartsWith("https://")) ){
+    $PassURLs += $URL
+  }
+  else { $FormatFailURLs += $URL }
+}
+
+# Incorrectly formatted URLs are dumped here
+$FormatFailURLs | Export-CSV FormatFailedURLs.csv
+
+# Finds live URLs
+Foreach ( $URL in $PassURLs ){
+  if ( -not ( Test-LiveURL $URL )){
+    $FailedURLs += $URL
+  }
+  else { 
+    $Response = Test-LiveURL $URL
+    $WorkingURLs.Add($URL, $Response.StatusDescription)
+  }
+}
+
+# Broken URLs dumped here
+$FailedURLs | Export-CSV FailedURLs.csv
+
+# Dump working URLs and their status code
+$WorkingURLs | Export-CSV WorkingURLs.csv
