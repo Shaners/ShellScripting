@@ -26,7 +26,7 @@ $webClient = New-Object Net.WebClient
 # Exit with status message on improper use
 function Error-Out {
   param ( [string]$Message, [int]$ExitCode=1 )
-  Write-Host -foregroundcolor red "`n$Message"; exit $ExitCode
+  Write-Host -foregroundcolor red "`n$Message"; exit $ExitCode 
 }
 
 # Tests if a single website url is working properly
@@ -74,3 +74,23 @@ function Test-CommonURLs {
 # a lot of this is already taken care of in Test-LiveURL but I want to be able to 
 # pull out all URLs that don't start with http and not test them but put into a 
 # separate invalid / to be fixed list
+function Test-FormatURL {
+  param ( [string]$URL )
+  if ( ($URL )
+}
+#! May not need this at all and can just do .startswith("x") in main call
+
+# Error exit out if no parameters are provided to script
+if ( $args.count -ne 1 ){
+  Error-Out "You haven't provided an input .CSV file. `n!!!Exiting script!!!", 1
+}
+
+# Error exit if a folder is picked
+
+# Error exit out if file does not exist
+if ( -not (test-path working.xlsx -pathtype leaf) ){
+  Error-Out "The file you selected doesn't exist there. `n!!!Exiting script!!!", 2
+}
+
+# import CSV file into a collection
+Import-CSV $args[0]
