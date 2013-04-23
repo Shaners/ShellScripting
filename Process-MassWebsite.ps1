@@ -92,7 +92,7 @@ $URLs = @( Import-CSV $args[0] )
 $PassURLs = @()
 $FormatFailURLs = @()
 $FailedURLs = @()
-$WorkingURLs = @{}
+$WorkingURLs = @()
 
 # Separates incorrectly formatted URLs from properly formatted ones
 Foreach ( $URL in $URLs ){
@@ -116,7 +116,8 @@ Foreach ( $URL in $PassURLs ){
     $FailedURLs += $URL
   }
   else {
-    $WorkingURLs.Add($URL.Website, $URL.RecordID, $Response.StatusDescription)
+    $URL."Overall Status" = $Response.StatusDescription
+    $WorkingURLs += $URL
   }
 }
 #! Why does this keep timing out like before?
