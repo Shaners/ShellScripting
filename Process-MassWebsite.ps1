@@ -9,8 +9,8 @@
 # Exports failures to CSV
 #
 # Shane Lister
-# Version: 0.2
-# Created on: Apr 22nd, 2013
+# Version: 0.3
+# Modified on: Apr 23rd, 2013
 
 # Collection of common URLs
 $CommonURLs = "https://www.google.ca", "https://www.google.com", "https://www.facebook.com", "https://twitter.com", "http://www.wolframalpha.com"
@@ -21,8 +21,7 @@ function Error-Out {
   Write-Host -foregroundcolor red "`n$Message"; exit $ExitCode 
 }
 
-# Tests if a single website url is working properly
-# Returns false or a hash table
+# Tests if a single website url is working properly, returns false or a hash table
 function Test-LiveURL {
   param ( [string]$URL )
   $ErrorActionPreference = "SilentlyContinue"
@@ -61,21 +60,29 @@ function Test-CommonURLs {
 
 
 # Error exit out if it is suspect that there is no connection
-Test-CommonURLs #finish this
+$TestFails, $TotalTested = Test-CommonURLs $CommonURLs
+if ( $TestFails -eq $TotalTested ){ 
+  Error-Out "You do not have a live internet connection or have limited connectivity. `n!!!Exiting script!!!", 1
+}
+
+# Warning message if more than half of common URLs fail
+if ( $TestFails -gt ( $TotalTested / 2 ) ){ 
+  Write-Host -foregroundcolor red "!!! Warning, more than half of the common URLs failed. Your results may not be valid !!!"
+}
 
 # Error exit out if no parameters are provided to script
 if ( $args.count -ne 1 ){
-  Error-Out "You haven't provided an input .CSV file. `n!!!Exiting script!!!", 1
+  Error-Out "You haven't provided an input .CSV file. `n!!!Exiting script!!!", 2
 }
 
 # Error exit if a folder is picked
 if ( Test-Path $args[0] -pathtype container ){
-  Error-Out "You provided a folder. Please provide a .CSV file instead. `n!!!Exiting script!!!", 2
+  Error-Out "You provided a folder. Please provide a .CSV file instead. `n!!!Exiting script!!!", 3
 }
 
 # Error exit out if file does not exist
 if ( -not (Test-Path $args[0] -pathtype leaf) ){
-  Error-Out "The file you selected doesn't exist there. `n!!!Exiting script!!!", 3
+  Error-Out "The file you selected doesn't exist there. `n!!!Exiting script!!!", 4
 }
 
 # Import CSV file into a collection
@@ -87,6 +94,7 @@ $FormatFailURLs = @()
 $FailedURLs = @()
 $WorkingURLs = @{}
 
+# Separates incorrectly formatted URLs from properly formatted ones
 Foreach ( $URL in $URLs ){
   if ( ($URL.StartsWith("http://")) -or ($URL.StartsWith("https://")) ){
     $PassURLs += $URL
@@ -95,7 +103,10 @@ Foreach ( $URL in $URLs ){
 }
 
 # Incorrectly formatted URLs are dumped here
-$FormatFailURLs | Export-CSV FormatFailedURLs.csv
+# $FormatFailURLs | Export-CSV FormatFailedURLs.csv # Giving length not name??
+Foreach ( $URL in $FormatFailURLs ){
+  $URL >> FormatFailedURLs.csv
+}
 
 # Finds live URLs
 Foreach ( $URL in $PassURLs ){
@@ -107,9 +118,16 @@ Foreach ( $URL in $PassURLs ){
     $WorkingURLs.Add($URL, $Response.StatusDescription)
   }
 }
+#! Why does this keep timing out like before?
 
 # Broken URLs dumped here
-$FailedURLs | Export-CSV FailedURLs.csv
+# $FailedURLs | Export-CSV FailedURLs.csv # Giving me into on the hash table
+Foreach ( $URL in $FailedURLs ){
+  $URL >> FailedURLs.csv
+}
 
 # Dump working URLs and their status code
-$WorkingURLs | Export-CSV WorkingURLs.csv
+# $WorkingURLs | Export-CSV WorkingURLs.csv # This can be fixed I think
+Foreach ( $URL in $WorkingURLs ){
+  $URL >> WorkingURLs.csv
+}
