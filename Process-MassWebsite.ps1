@@ -96,7 +96,7 @@ $WorkingURLs = @{}
 
 # Separates incorrectly formatted URLs from properly formatted ones
 Foreach ( $URL in $URLs ){
-  if ( ($URL.StartsWith("http://")) -or ($URL.StartsWith("https://")) ){
+  if ( ($URL.Website.StartsWith("http://")) -or ($URL.Website.StartsWith("https://")) ){
     $PassURLs += $URL
   }
   else { $FormatFailURLs += $URL }
@@ -110,15 +110,17 @@ Foreach ( $URL in $FormatFailURLs ){
 
 # Finds live URLs
 Foreach ( $URL in $PassURLs ){
-  if ( -not ( Test-LiveURL $URL )){
+  $Response = $Null
+  if ( -not ( Test-LiveURL ($URL.website) )){
     $FailedURLs += $URL
   }
   else { 
-    $Response = Test-LiveURL $URL
+    $Response = Test-LiveURL $URL.website
     $WorkingURLs.Add($URL, $Response.StatusDescription)
   }
 }
 #! Why does this keep timing out like before?
+#!! Needed to null out $response
 
 # Broken URLs dumped here
 # $FailedURLs | Export-CSV FailedURLs.csv # Giving me into on the hash table
