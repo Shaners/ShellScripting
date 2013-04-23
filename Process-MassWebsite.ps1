@@ -111,12 +111,12 @@ Foreach ( $URL in $FormatFailURLs ){
 # Finds live URLs
 Foreach ( $URL in $PassURLs ){
   $Response = $Null
-  if ( -not ( Test-LiveURL ($URL.website) )){
+  $Response = Test-LiveURL $URL.website
+  if ( $Response -eq $False ){
     $FailedURLs += $URL
   }
-  else { 
-    $Response = Test-LiveURL $URL.website
-    $WorkingURLs.Add($URL, $Response.StatusDescription)
+  else {
+    $WorkingURLs.Add($URL.Website, $URL.RecordID, $Response.StatusDescription)
   }
 }
 #! Why does this keep timing out like before?
