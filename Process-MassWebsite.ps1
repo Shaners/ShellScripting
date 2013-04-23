@@ -48,7 +48,7 @@ function Test-LiveURL {
 
 # Tests some common sites that should always be up
 function Test-CommonURLs {
-  param ( [array]$URLS )
+  param ( [string[]]$URLS )
   $failCount = 0
   foreach ( $URL in $URLS ){
     if ( ( Test-LiveURL $URL ) -eq $False ){
