@@ -9,8 +9,8 @@
 # Exports failures to CSV
 #
 # Shane Lister
-# Version: 0.3
-# Modified on: Apr 23rd, 2013
+# Version: 1.0
+# Modified on: Apr 24th, 2013
 
 # Collection of common URLs
 $CommonURLs = "https://www.google.ca", "https://www.google.com", "https://www.facebook.com", "https://twitter.com", "http://www.wolframalpha.com"
@@ -34,13 +34,29 @@ function Test-LiveURL {
       break
   }
   
-  $then = get-date
+  $ErrorActionPreference = "SilentlyContinue"
+  # $then = get-date
   $response = $webRequest.GetResponse()
-  $now = get-date
+  $responseResult = $?
+  # $now = get-date
+  $ErrorActionPreference = "Continue"
+  
+  if ( $responseResult -eq $False ) {
+      #$report = @{ URL = $URL
+      #         StatusCode = 999
+      #         StatusDescription = "Error Processing" 
+      #         # ResponseTime = "$(($now - $then).totalseconds)"
+      #        ResponseURI = "None"
+      #}
+      # return $report
+      return $False
+      break
+  }
+  
   $report = @{ URL = $URL
                StatusCode = $response.Statuscode -as [int]
                StatusDescription = $response.StatusDescription
-               ResponseTime = "$(($now - $then).totalseconds)"
+               # ResponseTime = "$(($now - $then).totalseconds)"
                ResponseURI = $response.ResponseUri
   }
   return $report
@@ -103,10 +119,7 @@ Foreach ( $URL in $URLs ){
 }
 
 # Incorrectly formatted URLs are dumped here
-# $FormatFailURLs | Export-CSV FormatFailedURLs.csv # Giving length not name??
-Foreach ( $URL in $FormatFailURLs ){
-  $URL >> FormatFailedURLs.csv
-}
+$FormatFailURLs | Export-CSV FormatFailedURLs.csv -notype
 
 # Finds live URLs
 Foreach ( $URL in $PassURLs ){
@@ -116,21 +129,16 @@ Foreach ( $URL in $PassURLs ){
     $FailedURLs += $URL
   }
   else {
-    $URL."Overall Status" = $Response.StatusDescription
+    $URL."Website Status" = $Response.StatusDescription
+    $URL."Website Status Code" = $Response.StatusCode
+    $URL.ResponseURI = $Response.ResponseUri
+    $URL."Response Time" = $Response.ResponseTime
     $WorkingURLs += $URL
   }
 }
-#! Why does this keep timing out like before?
-#!! Needed to null out $response
 
 # Broken URLs dumped here
-# $FailedURLs | Export-CSV FailedURLs.csv # Giving me into on the hash table
-Foreach ( $URL in $FailedURLs ){
-  $URL >> FailedURLs.csv
-}
+$FailedURLs | Export-CSV FailedURLs.csv -notype
 
 # Dump working URLs and their status code
-# $WorkingURLs | Export-CSV WorkingURLs.csv # This can be fixed I think
-Foreach ( $URL in $WorkingURLs ){
-  $URL >> WorkingURLs.csv
-}
+$WorkingURLs | Export-CSV WorkingURLs.csv -notype
