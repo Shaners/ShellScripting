@@ -35,20 +35,13 @@ function Test-LiveURL {
   }
   
   $ErrorActionPreference = "SilentlyContinue"
-  # $then = get-date
+  $then = get-date
   $response = $webRequest.GetResponse()
   $responseResult = $?
-  # $now = get-date
+  $now = get-date
   $ErrorActionPreference = "Continue"
   
   if ( $responseResult -eq $False ) {
-      #$report = @{ URL = $URL
-      #         StatusCode = 999
-      #         StatusDescription = "Error Processing" 
-      #         # ResponseTime = "$(($now - $then).totalseconds)"
-      #        ResponseURI = "None"
-      #}
-      # return $report
       return $False
       break
   }
@@ -56,7 +49,7 @@ function Test-LiveURL {
   $report = @{ URL = $URL
                StatusCode = $response.Statuscode -as [int]
                StatusDescription = $response.StatusDescription
-               # ResponseTime = "$(($now - $then).totalseconds)"
+               ResponseTime = "$(($now - $then).totalseconds)"
                ResponseURI = $response.ResponseUri
   }
   return $report
