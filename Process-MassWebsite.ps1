@@ -29,8 +29,9 @@ function Test-LiveURL {
   $Result = $?
   $ErrorActionPreference = "Continue"
 
-  $webRequest.AuthenticationLevel = "None"
-  $webRequest.Timeout = 20
+  # $webRequest.AuthenticationLevel = "None"
+  $webRequest.Timeout = 50
+  $webRequest.Method = "GET"
 
   if ( $Result -eq $False ) {
       $webRequest.Close()
@@ -46,8 +47,13 @@ function Test-LiveURL {
   $ErrorActionPreference = "Continue"
   
   if ( $responseResult -eq $False ) {
-      $response.Close()
-      return $False
+      $report = @{ URL = $URL
+               StatusCode = "9999"
+               StatusDescription = "Get response failed."
+               ResponseTime = "$(($now - $then).totalseconds)"
+               ResponseURI = "None" 
+      }
+      return $report
       break
   }
   
