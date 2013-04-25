@@ -29,7 +29,11 @@ function Test-LiveURL {
   $Result = $?
   $ErrorActionPreference = "Continue"
 
+  $webRequest.AuthenticationLevel = "None"
+  $webRequest.Timeout = 20
+
   if ( $Result -eq $False ) {
+      $webRequest.Close()
       return $False
       break
   }
@@ -42,6 +46,7 @@ function Test-LiveURL {
   $ErrorActionPreference = "Continue"
   
   if ( $responseResult -eq $False ) {
+      $response.Close()
       return $False
       break
   }
@@ -52,6 +57,7 @@ function Test-LiveURL {
                ResponseTime = "$(($now - $then).totalseconds)"
                ResponseURI = $response.ResponseUri
   }
+  $response.Close()
   return $report
 }
 
@@ -115,11 +121,19 @@ Foreach ( $URL in $URLs ){
 $FormatFailURLs | Export-CSV FormatFailedURLs.csv -notype
 
 # Finds live URLs
+$then = Get-Date
 Foreach ( $URL in $PassURLs ){
+  $now = Get-Date
+  Write-Host "Script run time (seconds): $(($now - $then).totalseconds)"
+  Write-Host "Testing: $($URL.Website)"
+  
   $Response = $Null
   $Response = Test-LiveURL $URL.website
   if ( $Response -eq $False ){
     $FailedURLs += $URL
+    $EndTime = Get-Date
+    Write-Host "End"
+    Write-Host "Run time for this URL (seconds): $(($EndTime - $now).totalseconds)"
   }
   else {
     $URL."Website Status" = $Response.StatusDescription
@@ -127,6 +141,9 @@ Foreach ( $URL in $PassURLs ){
     $URL.ResponseURI = $Response.ResponseUri
     $URL."Response Time" = $Response.ResponseTime
     $WorkingURLs += $URL
+    $EndTime = Get-Date
+    Write-Host "End"
+    Write-Host "Run time for this URL (seconds): $(($EndTime - $now).totalseconds)"
   }
 }
 
