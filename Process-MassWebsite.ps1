@@ -24,14 +24,16 @@ function Error-Out {
 # Tests if a single website url is working properly, returns false or a hash table
 function Test-LiveURL {
   param ( [string]$URL )
+  $Result = $Null
   $ErrorActionPreference = "SilentlyContinue"
-  $webRequest = [net.WebRequest]::Create($URL)
+  # $webRequest = [net.WebRequest]::Create($URL)
+  $webRequest = [System.Net.WebRequest]::Create($URL)
   $Result = $?
   $ErrorActionPreference = "Continue"
 
   # $webRequest.AuthenticationLevel = "None"
-  $webRequest.Timeout = 50
-  $webRequest.Method = "GET"
+  # $webRequest.Timeout = 50
+  # $webRequest.Method = "GET"
 
   if ( $Result -eq $False ) {
       $webRequest.Close()
@@ -39,6 +41,7 @@ function Test-LiveURL {
       break
   }
   
+  $responseResult = $Null
   $ErrorActionPreference = "SilentlyContinue"
   $then = get-date
   $response = $webRequest.GetResponse()
