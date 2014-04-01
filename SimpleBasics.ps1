@@ -97,6 +97,52 @@ else
   wscript.quit 3
 end if
 
+# Put first Monday of current month into a var
+dtmFirstDay = DateSerial(Year(Date), month(Date), 1)
+intWeekDay = Weekday(dtmFirstDay, 1)
+if intWeekDay = 2 then dtmFirstMonday = dtmFirstDay
+if intWeekDay > 2 then dtmFirstmonday = DateAdd("d", (9 - intWeekDay), dtmFirstday)
+if intWeekDay = 1 then dtmFirstMonday = DateAdd("d", 1, dtmFirstDay)
+
+# Delete any file in current folder that contain a tilde (~) in file name
+Set objFS = CreateObject("Scripting.FileSystemObject")
+Set objFolder = objFS.GetFolder(".")
+for each objFile in objFolder.Files
+  intTildePos = InStr(objFile, "~")
+  if intTildePos <> 0 then
+    objFile.delete
+  end if
+next
+
+# Make backup copy of a file then edit it: mod date, date to name
+if wscript.arguments.count < 1 then
+  wscript.echo "Error: Missing the file name parameter."
+  wscript.quit 1
+end if
+strFile = wscript.arguments(0)
+set objFS = CreateObject( "Scripting.FileSystemObject" )
+if not objFS.FileExists( strFile ) then
+  wscript.echo "Error: File referenced does not exist."
+  wscript.quit 2
+end if
+set objFile = objFS.GetFile( strFile )
+dtmFileMod = objFile.DateLastModified
+strFileMod = Year( dtmFileMod ) & "-" & Right( "00" & Month( dtmFileMod ), 2) & "-" & Right( "00" & Day( dtmFileMod ), 2)
+strNewName = objFS.GetBaseName( objfile ) & "_" & strFileMod & "." & objFS.GetExtensionName( objFile )
+if objFS.FileExists( strNewName ) then
+  wscript.echo "     "
+  wscript.echo "     Found an existing back up, not making a copy."
+else
+  objFile.Copy strNewName
+end if
+set objShell = CreateObject( "Wscript.shell" )
+strCmd = "Notepad " & strFile
+objShell.Run strCmd, 1, TRUE
+dtmFileModNew = objFile.DatelastModified 
+if dtmFileModNew = dtmFileMod then
+  objFS.DeleteFile strNewName
+end if
+
 # Get files with a type of .bat whose names end in DB
 Get-ChildItem *DB.bat
 
