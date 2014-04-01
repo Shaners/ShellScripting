@@ -61,7 +61,41 @@ if strCompare = "<" then
   else
     wscript.echo "False"
   end if
-elseif strCompare = "<=" then #this goes on...
+elseif strCompare = "<=" then 
+  if (intNum1 <= intNum2) then
+    wscript.echo "True"
+  else
+    wscript.echo "False"
+  end if
+elseif strCompare = "=" then 
+  if (intNum1 = intNum2) then
+    wscript.echo "True"
+  else
+    wscript.echo "False"
+  end if
+elseif strCompare = "<>" then 
+  if (intNum1 <> intNum2) then
+    wscript.echo "True"
+  else
+    wscript.echo "False"
+  end if
+elseif strCompare = ">=" then 
+  if (intNum1 >= intNum2) then
+    wscript.echo "True"
+  else
+    wscript.echo "False"
+  end if
+elseif strCompare = ">" then 
+  if (intNum1 > intNum2) then
+    wscript.echo "True"
+  else
+    wscript.echo "False"
+  end if
+else
+  wscript.echo StrErrorMessage, "You must use a comparison operator parameter: <, <=, =, <>, >=, or >"
+  wscript.echo "You used", strCompare, "."
+  wscript.quit 3
+end if
 
 # Get files with a type of .bat whose names end in DB
 Get-ChildItem *DB.bat
