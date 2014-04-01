@@ -5,6 +5,64 @@ if ( $True ) { break }
 Start-Sleep 5
 Exit
 
+# vbs start
+# Delete files that begin with a ~ and end in .tmp
+del ~*.tmp
+
+# Delete files that have an extention that begins with a d in working directory and subdirectories, may remove more than you wanted
+del *.d* /s
+
+# Delete all files that have the attribute of being system files and contain 9 in the file name
+del /AS *9*
+
+# Change PS prompt to newline, computer name, two backslashes, current default path, > and a space 
+prompt $_ %COMPUTERNAME% \$S\ $P $G $S
+
+# Copy file into D:\Backups\ and turn off archive attribute on original copy
+FOR %%i in (%*) do copy /Y %%i D:\Backups\
+FOR %%i in (%*) do attrib -A %%i
+pause
+
+# Display arguments provided to script in reverse order
+For intLoopCounter = wscript.arguments.count to 1 step -1
+  wscript.echo wscript.arguments(intLoopcounter - 1)
+Next
+
+# Print factorial of number
+# missing IsNumeric check
+if wscript.arguments.count > 1 or wscript.arguments(0) > 170 or wscript.arguments(0) < 1 then
+  wscript.echo "!Error!: Please provide only one parameter that is between 1 and 170"
+  wscript.quit 1
+end if
+intTotal = (Int(wscript.arguments(0))
+for intLoop = (Int(wscript.arguments(0)) to 2 step -1
+  intTotal = intTotal * (intLoop -1)
+next
+wscript.echo "The Factorial of", wscript.arguments(0)), "is", intTotal
+
+# Compares 2 numbers based on comparison operator provided
+StrErrorMessage = "!Error! Could not compare!"
+if wscript.arguments.count <> 3 then
+  wscript.echo StrErrorMessage, "You must provide exactly 3 parameters."
+  wscript.echo "You provided",  wscript.arguments.count, " parameters."
+  wscript.quit 1
+end if
+if not (IsNumeric(wscript.arguments(0))) or not (IsNumeric(wscript.arguments(2))) then
+  wscript.echo strErrorMessage, "both the first and last parameter must be a number."
+  wscript.echo "You provided", wscript.arguments(0), "and", wscript.arguments(2), "."
+  wscript.quit 2
+end if
+intNum1 = (Int(wscript.arguments(0))
+intNum2 = (Int(wscript.arguments(2))
+strCompare = wscript.arguments(1)
+if strCompare = "<" then
+  if (intNum1 < intNum2) then
+    wscript.echo "True"
+  else
+    wscript.echo "False"
+  end if
+elseif strCompare = "<=" then #this goes on...
+
 # Get files with a type of .bat whose names end in DB
 Get-ChildItem *DB.bat
 
