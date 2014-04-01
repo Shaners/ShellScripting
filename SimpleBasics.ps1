@@ -142,6 +142,7 @@ dtmFileModNew = objFile.DatelastModified
 if dtmFileModNew = dtmFileMod then
   objFS.DeleteFile strNewName
 end if
+# vbs end
 
 # Get files with a type of .bat whose names end in DB
 Get-ChildItem *DB.bat
