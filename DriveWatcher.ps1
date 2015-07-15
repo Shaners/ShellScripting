@@ -1,4 +1,4 @@
-$searchPath = "Watched dive here"
+$searchPath = "Watched drive here"
 
 $watcher = New-Object System.IO.FileSystemWatcher
 $watcher.Path = $searchPath
